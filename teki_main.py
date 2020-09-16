@@ -1,7 +1,9 @@
 import pyttsx3
 import serial
 import os
-exec(open(os.getcwd + "\\detect_mask_video.py").read())
+
+os.startfile("detect_mask_video.py")
+
 def begin():
     print("Choose a language: ")
     print("╔═════════════╦════════════════╦═════════════╗")
@@ -12,15 +14,15 @@ def begin():
 
 languageSelected = False
 while languageSelected == False:
-    b = begin()
-    if b == "1":
+    lambda: os.system('cls')() #clear
+    a = begin()
+    if a == "1":
         print("English selected!")
         languageSelected = True
-    if b == "2":
+    if a == "2":
         print("¡Castellano seleccionado!")
         languageSelected = True
-    if b == "3":
+    if a == "3":
         print("Euskera aukeratuta!")
         languageSelected = True
-
-print("blablabla código")
+print("code")
