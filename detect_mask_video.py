@@ -18,9 +18,6 @@ from threading import Timer
 import shutil
 import time
 
-import serial
-
-ser = serial.Serial("COM1", baudrate = 9600, timeout = 1)
 
 detections = None 
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
@@ -84,17 +81,17 @@ THRESHOLD = 0.5
 #sound = mixer.Sound(SOUND_PATH)
 
 # load our serialized face detector model from disk
-print("[INFO] loading face detector model...")
+#print("[INFO] loading face detector model...")
 prototxtPath = os.path.sep.join([FACE_MODEL_PATH, "deploy.prototxt"])
 weightsPath = os.path.sep.join([FACE_MODEL_PATH,"res10_300x300_ssd_iter_140000.caffemodel"])
 faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 
 # load the face mask detector model from disk
-print("[INFO] loading face mask detector model...")
+#print("[INFO] loading face mask detector model...")
 maskNet = load_model(MASK_MODEL_PATH)
 
 # initialize the video stream and allow the camera sensor to warm up
-print("[INFO] starting video stream...")
+#print("[INFO] starting video stream...")
 vs = VideoStream(0).start()
 time.sleep(2.0)
 
@@ -138,9 +135,9 @@ while True:
 		averageX = (startX + endX)/2
 		averageY = (startY + endY)/2
 		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-		ser.write(a)
+		
 		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
-
+		time.sleep(.05)
 		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 
 	# show the output frame

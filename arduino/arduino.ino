@@ -1,16 +1,15 @@
 #include <Servo.h>
 
-Servo myservo;  // create servo object to control a servo
-// twelve servo objects can be created on most boards
+Servo servo;
 
-int pos = 0;    // variable to store the servo position
-
-void setup() {
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
-  Serial.begin(9600);
+void setup()
+{
+  servo.attach(9);
+  pinMode(13, OUTPUT);
+  Serial.begin(250000);
 }
-
 void loop() {
-  rotation = Serial.read()
-  myservo.write(rotation);
+servo.write(Serial.parseInt());
+
+
 }

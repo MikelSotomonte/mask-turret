@@ -1,8 +1,8 @@
 import pyttsx3
 import serial
 import os
+import time
 
-os.startfile("detect_mask_video.py")
 
 def begin():
     print("Choose a language: ")
@@ -13,6 +13,7 @@ def begin():
     return a
 
 languageSelected = False
+time.sleep(.5)
 while languageSelected == False:
     lambda: os.system('cls')() #clear
     a = begin()
@@ -25,4 +26,12 @@ while languageSelected == False:
     if a == "3":
         print("Euskera aukeratuta!")
         languageSelected = True
-print("code")
+
+if languageSelected == True:
+    import detect_mask_video
+    ser = serial.Serial("COM4", baudrate = 250000)
+    while True:
+        a = ser.read()
+        ser.write((str(a)+ '\r\n').encode())
+        print("aaaa" + str(detect_mask_video.averageX))
+        time.sleep(.05)
