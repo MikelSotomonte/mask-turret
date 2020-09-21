@@ -38,7 +38,6 @@ if languageSelected == True:
     ser = serial.Serial("COM" + comNumber, baudrate = 250000)
     while True:
         message = socket.recv_string()
+        ser.write((str(message)+ '\r\n').encode())
         print(message)
-    # ser.write((str(a)+ '\r\n').encode())
-    # print("aaaa" + str(detect_mask_video.averageX))
-    # time.sleep(.05)
+        time.sleep(.05)

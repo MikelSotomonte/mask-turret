@@ -46,7 +46,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	locs = []
 	preds = []
 	# loop over the detections
-	for i in range(0, detections.shape[2]):
+	for i in range(0, detections.shape[1]):
 		# extract the confidence (i.e., probability) associated with
 		confidence = detections[0, 0, i, 2]
 
@@ -143,10 +143,11 @@ while True:
 		#startX, startY, endX, endY
 		averageX = (startX + endX)/2
 		averageY = (startY + endY)/2
+		
 		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-		socket.send_string(str("helloooo"))
+		socket.send_string(str(int(averageX)))
 		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
-		time.sleep(.1)
+		time.sleep(.05)
 		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 
 	# show the output frame
