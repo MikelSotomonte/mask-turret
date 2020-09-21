@@ -18,9 +18,18 @@ from threading import Timer
 import shutil
 import time
 
+import zmq
+time.sleep(1)
+context = zmq.Context()
+print("Connecting to hello world server…")
+socket = context.socket(zmq.PUB)
+socket.connect("tcp://localhost:5555")
+
 
 detections = None 
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
+	global socket
+	global context
 	# grab the dimensions of the frame and then construct a blob
 	# from it
 	global detections 
@@ -135,9 +144,9 @@ while True:
 		averageX = (startX + endX)/2
 		averageY = (startY + endY)/2
 		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-		
+		socket.send_string(str("helloooo"))
 		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
-		time.sleep(.05)
+		time.sleep(.1)
 		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 
 	# show the output frame

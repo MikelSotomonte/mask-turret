@@ -2,7 +2,12 @@ import pyttsx3
 import serial
 import os
 import time
+import zmq
 
+context = zmq.Context()
+socket = context.socket(zmq.SUB)
+socket.bind("tcp://*:5555")
+socket.setsockopt_string(zmq.SUBSCRIBE, '')
 
 def begin():
     print("Choose a language: ")
@@ -28,10 +33,12 @@ while languageSelected == False:
         languageSelected = True
 
 if languageSelected == True:
-    import detect_mask_video
-    ser = serial.Serial("COM4", baudrate = 250000)
+    comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
+    os.startfile("detect_mask_video.py")
+    ser = serial.Serial("COM" + comNumber, baudrate = 250000)
     while True:
-        a = ser.read()
-        ser.write((str(a)+ '\r\n').encode())
-        print("aaaa" + str(detect_mask_video.averageX))
-        time.sleep(.05)
+        message = socket.recv_string()
+        print(message)
+    # ser.write((str(a)+ '\r\n').encode())
+    # print("aaaa" + str(detect_mask_video.averageX))
+    # time.sleep(.05)
