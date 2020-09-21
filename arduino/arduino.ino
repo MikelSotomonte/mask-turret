@@ -9,7 +9,7 @@ void setup()
   Serial.begin(250000);
 }
 void loop() {
-servo.write(map(Serial.parseInt(), 0, 360, 0, 180));
+servo.write(map(Serial.parseInt(), 0, 640, 0, 180));
 
 
 }
