@@ -40,4 +40,6 @@ if languageSelected == True:
         message = socket.recv_string()
         ser.write((str(message)+ '\r\n').encode())
         print(message)
+        if message == "quit":
+            break
         time.sleep(.05)
