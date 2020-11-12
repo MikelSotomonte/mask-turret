@@ -1,3 +1,6 @@
+//split string: strok()
+//character in string find: strchr()
+
 #include <Servo.h>
 
 Servo servo;

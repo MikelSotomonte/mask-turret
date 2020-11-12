@@ -35,11 +35,17 @@ while languageSelected == False:
 if languageSelected == True:
     comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
     os.startfile("detect_mask_video.py")
-    ser = serial.Serial("COM" + comNumber, baudrate = 250000)
+    try:
+        ser = serial.Serial("COM" + comNumber, baudrate = 250000)
+    except:
+        print("Error while opening Serial: COM" + str(comNumber))
     while True:
-        message = socket.recv_string()
-        ser.write((str(message)+ '\r\n').encode())
-        print(message)
+        try:
+            message = socket.recv_string()
+            ser.write((str(message)+ '\r\n').encode())
+            print(message)
+        except:
+            pass
         if message == "quit":
             break
         time.sleep(.05)
