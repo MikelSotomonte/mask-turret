@@ -161,7 +161,7 @@ while True:
 		averageY = (startY + endY)/2
 		
 		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-		socket.send_string(str(int(averageX)))
+		socket.send_string(str(int(averageX)) + ":" + str(int(averageY)))
 		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 		time.sleep(.05)
 		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
