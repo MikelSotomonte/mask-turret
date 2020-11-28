@@ -117,7 +117,7 @@ maskNet = load_model(MASK_MODEL_PATH)
 # initialize the video stream and allow the camera sensor to warm up
 #print("[INFO] starting video stream...")
 vs = VideoStream(0).start()
-time.sleep(2.0)
+#time.sleep(2.0)
 frameCycle = 1
 
 # loop over the frames from the video stream
@@ -162,9 +162,10 @@ while True:
 		
 		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
 		socket.send_string(str(int(averageX)) + ":" + str(int(averageY)))
+		print(str(averageX) + ":" + str(averageY))
 		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
-		time.sleep(.05)
 		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
+		#time.sleep(0.1)
 
 
 	# show the output frame
