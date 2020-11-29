@@ -5,18 +5,6 @@ import time
 import zmq
 import asyncio
 
-# context = zmq.Context()
-# sub = context.socket(zmq.SUB)
-# sub.connect('tcp://localhost:5555')
-# sub.setsockopt(zmq.CONFLATE, 1)
-# sub.subscribe()
-#socket.setsockopt_string(zmq.SUBSCRIBE, '')
-
-# ctx = zmq.Context()
-# sub = ctx.socket(zmq.SUB)
-# sub.setsockopt(zmq.CONFLATE, 1)
-# sub.connect('tcp://127.0.0.1:24000')
-
 context = zmq.Context()
 sub = context.socket(zmq.SUB)
 sub.setsockopt_string(zmq.SUBSCRIBE, '')
@@ -52,7 +40,6 @@ if languageSelected == True:
     comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
     delay = input("Delay between readings (ms)? (if too short can clog the system)\n> ")
     os.startfile("detect_mask_video.py")
-    time.sleep(5)
     try:
         ser = serial.Serial("COM" + comNumber, baudrate = 345600)
     except:

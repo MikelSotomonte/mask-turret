@@ -19,11 +19,6 @@ import shutil
 import time
 
 import zmq
-#time.sleep(1)
-# context = zmq.Context()
-# print("Connecting to hello world server…")
-# pub = context.socket(zmq.PUB)
-# pub.connect('tcp://localhost:5555')
 
 ctx = zmq.Context()
 pub = ctx.socket(zmq.PUB)
