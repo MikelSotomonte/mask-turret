@@ -10,7 +10,7 @@ String xString;
 String yString;
 int x;
 int y;
-bool a;
+String readString, data1, data2, data3;
 void setup()
 {
   servo.attach(9);
@@ -19,28 +19,32 @@ void setup()
   servo2.write(90);
   pinMode(13, OUTPUT);
   Serial.begin(345600);
-  Serial.setTimeout(200);
+  Serial.setTimeout(5);
 }
 
-void loop()
-{
-//  if (Serial.available() > 0) {
-    xString = Serial.readStringUntil(':');
-      //Serial.println("x: " + xString);
-      //Serial.read();
-      yString = Serial.readStringUntil('\0');
-      Serial.read();
-      //Serial.println("y: " + yString);
-    
-      x = xString.toInt();
-      y = yString.toInt();
-      Serial.println(y);
-      Serial.println(x);
-      x = map(x, 0, 640, 0, 180);
-      y = map(y, 0, 640, 180, 0);
-      
-      servo.write(x);
-      servo2.write(y); 
-//  }
-  delay(500);
+void loop() {
+  while (Serial.available()) {
+    delay(2);
+    if (Serial.available() >0) {
+      char c = Serial.read();  //gets one byte from serial buffer
+      readString += c; //makes the string readString
+    }
+  }
+
+  if (readString.length() >0) {   
+    data1 = readString.substring(0, 3); //get the first three characters
+    data2 = readString.substring(3, 6); //get the next three characters
+    //data3 = readString.substring(6, 9); //get the next three characters
+
+     
+    x = map(data1.toInt(), 0, 640, 0, 180);
+    y = map(data2.toInt(), 0, 640, 180, 0);
+    servo.write(x);
+    servo2.write(y);
+
+    readString="";
+    data1="";
+    data2="";
+  }
+
 }

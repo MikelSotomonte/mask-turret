@@ -157,7 +157,8 @@ while True:
 			averageY = (startY + endY)/2
 			
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-			pub.send_string(str(int(averageX)) + ":" + str(int(averageY)))
+			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
+			pub.send_string(message)
 			print(str(averageX) + ":" + str(averageY))
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
@@ -167,7 +168,7 @@ while True:
 
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
-	cv2.imshow("Masks Detection by Oh Yicong", frame)
+	cv2.imshow("Masks Detection by Oh Yicong and modified by Mikel Casado", frame)
 	key = cv2.waitKey(1) & 0xFF
 	
 	# if the `q` key was pressed, break from the loop
