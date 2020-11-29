@@ -39,7 +39,12 @@ while languageSelected == False:
 if languageSelected == True:
     comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
     #delay = input("Delay between readings (ms)? (if too short can clog the system)\n> ")
-    os.startfile("detect_mask_video.py")
+    try:
+        os.startfile("detect_mask_video.py")
+        print("Running DEBUG mode (conosle will open) to change this add a \"w\" to \"detect_mask_video.py\" after the \".py\".")
+    except:
+        os.startfile("detect_mask_video.pyw")
+        print("Running NON-DEBUG mode (console will NOT open) to change this remove the \"w\" from \"detect_mask_video.pyw\"")
     try:
         ser = serial.Serial("COM" + comNumber, baudrate = 1000000)
     except:

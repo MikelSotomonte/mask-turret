@@ -60,11 +60,11 @@ void loop() {
         pot2 = analogRead(A3);
         digitalWrite(13, LOW);
         //Serial.println(oA);
-        if(pot1 > 768){oA = oA + 1;}
-        if(pot1 < 256){oA = oA - 1;}
+        if(pot1 > 768){oA = oA + 5;}
+        if(pot1 < 256){oA = oA - 5;}
   
-        if(pot2 > 768){oB = oB + 1;}
-        if(pot2 < 256){oB = oB - 1;}
+        if(pot2 > 768){oB = oB + 5;}
+        if(pot2 < 256){oB = oB - 5;}
         delay(100);
       }
     else{digitalWrite(13, LOW);}
