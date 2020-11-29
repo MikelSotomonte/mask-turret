@@ -38,16 +38,16 @@ while languageSelected == False:
 
 if languageSelected == True:
     comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
-    delay = input("Delay between readings (ms)? (if too short can clog the system)\n> ")
+    #delay = input("Delay between readings (ms)? (if too short can clog the system)\n> ")
     os.startfile("detect_mask_video.py")
     try:
-        ser = serial.Serial("COM" + comNumber, baudrate = 345600)
+        ser = serial.Serial("COM" + comNumber, baudrate = 1000000)
     except:
         print("Error while opening Serial: COM" + str(comNumber))
     while True:
         msg = sub.recv_string()
         ser.write((str(msg)+ '\r\n').encode())
         print(msg)
-        time.sleep(float(delay))
+        #time.sleep(float(delay))
         if msg == "quit":
             break
