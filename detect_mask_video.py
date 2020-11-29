@@ -19,12 +19,16 @@ import shutil
 import time
 
 import zmq
-time.sleep(1)
-context = zmq.Context()
-print("Connecting to hello world server…")
-socket = context.socket(zmq.PUB)
-socket.connect("tcp://localhost:5555")
+#time.sleep(1)
+# context = zmq.Context()
+# print("Connecting to hello world server…")
+# pub = context.socket(zmq.PUB)
+# pub.connect('tcp://localhost:5555')
 
+ctx = zmq.Context()
+pub = ctx.socket(zmq.PUB)
+pub.setsockopt(zmq.SNDHWM, 2)
+pub.bind('tcp://*:5555')
 
 detections = None 
 frameCycle = 1
@@ -32,7 +36,6 @@ OLDlocs = 0
 OLDpreds = 0
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	global frameCycle
-	global socket
 	global context
 	global OLDlocs
 	global OLDpreds
@@ -129,44 +132,43 @@ while True:
 	original_frame = frame.copy()
 	# detect faces in the frame and determine if they are wearing a
 	# face mask or not
-	(locs, preds) = detect_and_predict_mask(frame, faceNet, maskNet,THRESHOLD)
 
+	try:
+		(locs, preds) = detect_and_predict_mask(frame, faceNet, maskNet,THRESHOLD)
+		for (box, pred) in zip(locs, preds):
+			# unpack the bounding box and predictions
+			(startX, startY, endX, endY) = box
+			(mask, withoutMask) = pred
 
-	# loop over the detected face locations and their corresponding
-	# locations
-	for (box, pred) in zip(locs, preds):
-		# unpack the bounding box and predictions
-		(startX, startY, endX, endY) = box
-		(mask, withoutMask) = pred
+			# determine the class label and color we'll use to draw
+			# the bounding box and text
+			label = "Mask" if mask > withoutMask else "No Mask"
+			#if(label=="No Mask") and (mixer.get_busy()==False):
+			#    sound.play()
+			color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 
-		# determine the class label and color we'll use to draw
-		# the bounding box and text
-		label = "Mask" if mask > withoutMask else "No Mask"
-		#if(label=="No Mask") and (mixer.get_busy()==False):
-		#    sound.play()
-		color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+			# include the probability in the label
+			label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
 
-		# include the probability in the label
-		label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
-
-		# display the label and bounding box rectangle on the output
-		# frame
-		cv2.putText(original_frame, label, (startX, startY - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
-		cv2.rectangle(original_frame, (startX, startY), (endX, endY), color, 2)
-		cv2.rectangle(frame, (startX, startY+math.floor((endY-startY)/1.6)), (endX, endY), color, -1)
+			# display the label and bounding box rectangle on the output
+			# frame
+			cv2.putText(original_frame, label, (startX, startY - 10),cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
+			cv2.rectangle(original_frame, (startX, startY), (endX, endY), color, 2)
+			cv2.rectangle(frame, (startX, startY+math.floor((endY-startY)/1.6)), (endX, endY), color, -1)
+				
+			#output the face coordenates and other info
+			#startX, startY, endX, endY
+			averageX = (startX + endX)/2
+			averageY = (startY + endY)/2
 			
-		#output the face coordenates and other info
-		#startX, startY, endX, endY
-		averageX = (startX + endX)/2
-		averageY = (startY + endY)/2
-		
-		a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-		socket.send_string(str(int(averageX)) + ":" + str(int(averageY)))
-		print(str(averageX) + ":" + str(averageY))
-		cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
-		cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
-		#time.sleep(0.1)
-
+			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
+			pub.send_string(str(int(averageX)) + ":" + str(int(averageY)))
+			print(str(averageX) + ":" + str(averageY))
+			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
+			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
+			#time.sleep(0.1)
+	except:
+		pass
 
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
@@ -175,7 +177,7 @@ while True:
 	
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q"):
-		socket.send_string("quit")
+		pub.send_string("quit")
 		break
 
 # do a bit of cleanup

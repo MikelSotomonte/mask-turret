@@ -24,22 +24,23 @@ void setup()
 
 void loop()
 {
-  if (Serial.available() > 0) {
+//  if (Serial.available() > 0) {
     xString = Serial.readStringUntil(':');
-    //Serial.println("x: " + xString);
-    //Serial.read();
-    yString = Serial.readStringUntil('\0');
-    Serial.read();
-    //Serial.println("y: " + yString);
-  
-    x = xString.toInt();
-    y = yString.toInt();
-    Serial.println(y);
-    Serial.println(x);
-    x = map(x, 0, 640, 0, 180);
-    y = map(y, 0, 640, 180, 0);
+      //Serial.println("x: " + xString);
+      //Serial.read();
+      yString = Serial.readStringUntil('\0');
+      Serial.read();
+      //Serial.println("y: " + yString);
     
-    servo.write(x);
-    servo2.write(y); 
-  }
+      x = xString.toInt();
+      y = yString.toInt();
+      Serial.println(y);
+      Serial.println(x);
+      x = map(x, 0, 640, 0, 180);
+      y = map(y, 0, 640, 180, 0);
+      
+      servo.write(x);
+      servo2.write(y); 
+//  }
+  delay(500);
 }

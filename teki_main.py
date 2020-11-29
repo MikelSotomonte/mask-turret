@@ -3,11 +3,25 @@ import serial
 import os
 import time
 import zmq
+import asyncio
+
+# context = zmq.Context()
+# sub = context.socket(zmq.SUB)
+# sub.connect('tcp://localhost:5555')
+# sub.setsockopt(zmq.CONFLATE, 1)
+# sub.subscribe()
+#socket.setsockopt_string(zmq.SUBSCRIBE, '')
+
+# ctx = zmq.Context()
+# sub = ctx.socket(zmq.SUB)
+# sub.setsockopt(zmq.CONFLATE, 1)
+# sub.connect('tcp://127.0.0.1:24000')
 
 context = zmq.Context()
-socket = context.socket(zmq.SUB)
-socket.bind("tcp://*:5555")
-socket.setsockopt_string(zmq.SUBSCRIBE, '')
+sub = context.socket(zmq.SUB)
+sub.setsockopt_string(zmq.SUBSCRIBE, '')
+sub.setsockopt(zmq.CONFLATE, 1)
+sub.connect('tcp://localhost:5555')
 
 def begin():
     print("Choose a language: ")
@@ -32,21 +46,21 @@ while languageSelected == False:
         print("Euskera aukeratuta!")
         languageSelected = True
 
+
+
 if languageSelected == True:
     comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
-    #delay = input("Delay between readings (s)? (if too short can clog the system)\n> ")
+    delay = input("Delay between readings (ms)? (if too short can clog the system)\n> ")
     os.startfile("detect_mask_video.py")
+    time.sleep(5)
     try:
         ser = serial.Serial("COM" + comNumber, baudrate = 345600)
     except:
         print("Error while opening Serial: COM" + str(comNumber))
     while True:
-        try:
-            message = socket.recv_string()
-            ser.write((str(message)+ '\r\n').encode())
-            print(message)
-
-        except:
-            pass
-        if message == "quit":
+        msg = sub.recv_string()
+        ser.write((str(msg)+ '\r\n').encode())
+        print(msg)
+        time.sleep(float(delay))
+        if msg == "quit":
             break
