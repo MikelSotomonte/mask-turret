@@ -34,7 +34,11 @@ void loop() {
     if(digitalRead(12) == LOW){
       if(state < 3){state = state + 1;}
     else{state = 0;}
-    delay(250);
+    delay(1000);
+    if(digitalRead(12) == LOW){
+      Serial.println("Calibration data: sA = " + String(sA) + " | sB = " + String(sB) + " | oA = " + String(oA) + " | oB = " + String(oB));
+      
+      }
     }
     
     if(state == 1){

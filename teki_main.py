@@ -44,10 +44,15 @@ if languageSelected == True:
         ser = serial.Serial("COM" + comNumber, baudrate = 1000000)
     except:
         print("Error while opening Serial: COM" + str(comNumber))
+    print("sending info via serial!")
     while True:
         msg = sub.recv_string()
         ser.write((str(msg)+ '\r\n').encode())
-        print(msg)
         #time.sleep(float(delay))
+        while ser.in_waiting:  # Or: while ser.inWaiting():
+            string = str(ser.readline())
+            print("info recived! -> " + string[2:-5])
+            #print(string)
         if msg == "quit":
+            print("Quitting...")
             break
