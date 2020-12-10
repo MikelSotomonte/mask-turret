@@ -29,11 +29,24 @@ detections = None
 frameCycle = 1
 OLDlocs = 0
 OLDpreds = 0
+checking = 0
+def shooter(reading, x, y, x2, y2):
+	if checking == 0: #face in center and size is good
+		a = 0
+		for i in range(2000):
+			if reading: a += 1
+		checking = 0
+		if a >= 1000:
+			return 1
+	checking = 0
+	return 0
+	
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	global frameCycle
 	global context
 	global OLDlocs
 	global OLDpreds
+	global checking
 	# grab the dimensions of the frame and then construct a blob
 	# from it
 	global detections 
@@ -158,6 +171,7 @@ while True:
 			
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
 			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
+			shooter(startX, startY, endX, endY, withoutMask)
 			pub.send_string(message)
 			print(str(averageX) + ":" + str(averageY))
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
