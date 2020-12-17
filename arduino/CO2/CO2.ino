@@ -10,10 +10,8 @@ void setup(){
 void loop(){
 
 analog = analogRead(0);
-digital = digitalRead(2);
-
 Serial.println(analog);
-Serial.println(digital);
+
 
 delay(500);
 }
