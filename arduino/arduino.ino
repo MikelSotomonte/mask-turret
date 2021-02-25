@@ -26,6 +26,7 @@ void setup()
   servo.write(90);
   servo2.write(90);
   pinMode(13, OUTPUT);
+  pinMode(7, OUTPUT); //relay
   Serial.begin(1000000);
   Serial.setTimeout(5);
 }
