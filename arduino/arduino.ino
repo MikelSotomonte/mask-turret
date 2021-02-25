@@ -80,6 +80,7 @@ void loop() {
 
   if (readString.length() >0) {   
     data1 = readString.substring(0, 3); //get the first three characters
+    digitalWrite(13, HIGH);
     data2 = readString.substring(3, 6); //get the next three characters
     //data3 = readString.substring(6, 9); //get the next three characters
 

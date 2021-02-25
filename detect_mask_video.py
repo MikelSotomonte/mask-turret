@@ -30,16 +30,7 @@ frameCycle = 1
 OLDlocs = 0
 OLDpreds = 0
 checking = 0
-def shooter(reading, x, y, x2, y2):
-	if checking == 0: #face in center and size is good
-		a = 0
-		for i in range(2000):
-			if reading: a += 1
-		checking = 0
-		if a >= 1000:
-			return 1
-	checking = 0
-	return 0
+var = 0
 	
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	global frameCycle
@@ -168,12 +159,22 @@ while True:
 			#startX, startY, endX, endY
 			averageX = (startX + endX)/2
 			averageY = (startY + endY)/2
-			
+			################### doing the mask average for shooting
+			average = 0
+			suma = 0
+			var2 = str(label == Mask)
+			var = str(var) + str(var2)
+			var = var[1:101] #A + 1
+			for char in var:
+				suma += int(char)
+			average = suma/100 #A
+			if average == 100: #A
+				pub.send_string("s")
+			###################
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
-			shooter(startX, startY, endX, endY, withoutMask)
+			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY) + str(label == Mask))
 			pub.send_string(message)
-			print(str(averageX) + ":" + str(averageY))
+			#print(message)
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 			#time.sleep(0.1)
