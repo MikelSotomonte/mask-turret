@@ -79,6 +79,7 @@ void loop() {
   }
 
   if (readString.length() >0) {   
+    if (readString.substring(0,1) == "s"){digitalWrite(7, HIGH);}
     data1 = readString.substring(0, 3); //get the first three characters
     digitalWrite(13, HIGH);
     data2 = readString.substring(3, 6); //get the next three characters

@@ -52,12 +52,14 @@ if languageSelected == True:
     print("sending info via serial!")
     while True:
         msg = sub.recv_string()
+        print(msg)
         ser.write((str(msg)+ '\r\n').encode())
         #time.sleep(float(delay))
         while ser.in_waiting:  # Or: while ser.inWaiting():
             string = str(ser.readline())
             print("info recived! -> " + string[2:-5])
-            #print(string)
         if msg == "quit":
             print("Quitting...")
             break
+        if msg == "s":
+            print("Shoot input recived!!!")

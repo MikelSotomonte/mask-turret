@@ -30,7 +30,10 @@ frameCycle = 1
 OLDlocs = 0
 OLDpreds = 0
 checking = 0
-var = 0
+global var
+var = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+global var2
+var2 = 2
 	
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	global frameCycle
@@ -145,6 +148,10 @@ while True:
 			#if(label=="No Mask") and (mixer.get_busy()==False):
 			#    sound.play()
 			color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
+			if label == "Mask":
+				var2 = 0 
+			else:
+				var2 = 1
 
 			# include the probability in the label
 			label = "{}: {:.2f}%".format(label, max(mask, withoutMask) * 100)
@@ -159,20 +166,8 @@ while True:
 			#startX, startY, endX, endY
 			averageX = (startX + endX)/2
 			averageY = (startY + endY)/2
-			################### doing the mask average for shooting
-			average = 0
-			suma = 0
-			var2 = str(label == Mask)
-			var = str(var) + str(var2)
-			var = var[1:101] #A + 1
-			for char in var:
-				suma += int(char)
-			average = suma/100 #A
-			if average == 100: #A
-				pub.send_string("s")
-			###################
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY) + str(label == Mask))
+			#message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY)) GOTTA UNCOMMENT IN THE FUTURE-----------------------------------
 			pub.send_string(message)
 			#print(message)
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
@@ -180,7 +175,17 @@ while True:
 			#time.sleep(0.1)
 	except:
 		pass
-
+	################### doing the mask average for shooting
+	suma = 0
+	var = str(var) + str(var2)
+	var = var[1:101] #A + 1
+	for char in var:
+		suma += int(char)
+	if suma == 100: #A
+		pub.send_string("s")
+		var = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+	pub.send_string(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
+	###################
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
 	cv2.imshow("Masks Detection by Oh Yicong and modified by Mikel Casado", frame)
