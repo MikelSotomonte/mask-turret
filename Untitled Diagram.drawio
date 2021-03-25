@@ -1,0 +1,35 @@
+<mxfile host="app.diagrams.net" modified="2021-03-11T13:57:50.637Z" agent="5.0 (Windows)" etag="9-M1kA_p2nOXnryFf-vt" version="14.4.7" type="github">
+  <diagram id="XJMY_p66TIOdNshQTS1I" name="Page-1">
+    <mxGraphModel dx="868" dy="479" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-8" value="ZMQ" style="edgeStyle=none;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;startSize=6;sourcePerimeterSpacing=0;endArrow=open;endFill=0;endSize=6;targetPerimeterSpacing=0;strokeWidth=3;fontSize=13;startArrow=open;startFill=0;horizontal=1;verticalAlign=middle;fontStyle=1" edge="1" parent="1" source="DNI_yx09WFSDSM6TmQIa-17" target="qCXjxvX3iwaiMk3MSXyi-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-10" value="&lt;b&gt;SERIAL&lt;/b&gt;" style="edgeStyle=none;sketch=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=open;startFill=0;startSize=6;sourcePerimeterSpacing=0;endArrow=open;endFill=0;endSize=6;targetPerimeterSpacing=0;strokeWidth=3;fontSize=13;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="DNI_yx09WFSDSM6TmQIa-17" target="qCXjxvX3iwaiMk3MSXyi-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="DNI_yx09WFSDSM6TmQIa-17" value="&lt;h1&gt;&lt;font face=&quot;Lucida Console&quot;&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;main.py&lt;/span&gt;&lt;/font&gt;&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=5;glass=0;sketch=0;shadow=0;strokeColor=#FFAA00;fillColor=#FFFCA3;" parent="1" vertex="1">
+          <mxGeometry x="414" y="130" width="116" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-4" value="&lt;h1&gt;&lt;font face=&quot;Lucida Console&quot;&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;Teklatua&lt;/span&gt;&lt;/font&gt;&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=5;glass=0;sketch=0;shadow=0;fillColor=#e1d5e7;strokeColor=#760299;" vertex="1" parent="1">
+          <mxGeometry x="614" y="130" width="146" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-6" value="&lt;span style=&quot;font-size: 13px;&quot;&gt;USB&lt;/span&gt;" style="endArrow=open;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;endFill=0;targetPerimeterSpacing=0;sourcePerimeterSpacing=0;endSize=6;startSize=6;jumpStyle=none;sketch=0;verticalAlign=middle;fontSize=13;horizontal=1;fontStyle=1" edge="1" parent="1" source="qCXjxvX3iwaiMk3MSXyi-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="270" as="sourcePoint" />
+            <mxPoint x="534" y="150" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-7" value="&lt;h1&gt;&lt;font face=&quot;Lucida Console&quot;&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;webcam.py&lt;/span&gt;&lt;/font&gt;&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=5;glass=0;sketch=0;shadow=0;strokeColor=#FFAA00;fillColor=#FFFCA3;" vertex="1" parent="1">
+          <mxGeometry x="520" y="30" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="qCXjxvX3iwaiMk3MSXyi-9" value="&lt;h1&gt;&lt;font face=&quot;Lucida Console&quot;&gt;&lt;span style=&quot;font-weight: normal&quot;&gt;arduino.ino&lt;/span&gt;&lt;/font&gt;&lt;/h1&gt;" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=5;glass=0;sketch=0;shadow=0;strokeColor=#FFAA00;fillColor=#FFFCA3;" vertex="1" parent="1">
+          <mxGeometry x="270" y="30" width="176" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
