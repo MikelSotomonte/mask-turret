@@ -16,10 +16,13 @@ float sB= 1;
 //offset calibration
 int oA = 0;
 int oB = 0;
+bool buttonState = 0;
 
 String readString, data1, data2, data3;
 void setup()
 {
+  pinMode(7, OUTPUT);
+  digitalWrite(7, LOW);
   pinMode(12, INPUT_PULLUP);
   servo.attach(9);
   servo2.attach(10);
@@ -32,11 +35,13 @@ void setup()
 }
 
 void loop() {
-    if(digitalRead(12) == LOW){
+  
+    buttonState = digitalRead(12);
+    if(buttonState == LOW){
       if(state < 3){state = state + 1;}
-    else{state = 0;}
+      else{state = 0;}
     delay(1000);
-    if(digitalRead(12) == LOW){
+    if(buttonState == LOW){
       Serial.println("Calibration data: sA = " + String(sA) + " | sB = " + String(sB) + " | oA = " + String(oA) + " | oB = " + String(oB));
       
       }
@@ -79,7 +84,6 @@ void loop() {
   }
 
   if (readString.length() >0) {   
-    if (readString.substring(0,1) == "s"){digitalWrite(7, HIGH);}
     data1 = readString.substring(0, 3); //get the first three characters
     digitalWrite(13, HIGH);
     data2 = readString.substring(3, 6); //get the next three characters
@@ -97,4 +101,9 @@ void loop() {
     data1="";
     data2="";
   }
+  if (data1 == "s" && state == 0){
+      digitalWrite(7, HIGH);
+      delay(250);
+      digitalWrite(7, LOW);
+      }
 }

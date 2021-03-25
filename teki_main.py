@@ -46,15 +46,14 @@ if languageSelected == True:
         os.startfile("detect_mask_video.pyw")
         print("Running NON-DEBUG mode (console will NOT open) to change this remove the \"w\" from \"detect_mask_video.pyw\"")
     try:
-        ser = serial.Serial("COM" + comNumber, baudrate = 1000000)
+        ser = serial.Serial("COM" + comNumber, baudrate = 1000000, write_timeout = 0) #, timeout = 0
     except:
         print("Error while opening Serial: COM" + str(comNumber))
     print("sending info via serial!")
     while True:
         msg = sub.recv_string()
         print(msg)
-        ser.write((str(msg)+ '\r\n').encode())
-        #time.sleep(float(delay))
+        ser.write((str(msg)).encode(encoding='UTF-8'))
         while ser.in_waiting:  # Or: while ser.inWaiting():
             string = str(ser.readline())
             print("info recived! -> " + string[2:-5])

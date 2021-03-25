@@ -167,7 +167,7 @@ while True:
 			averageX = (startX + endX)/2
 			averageY = (startY + endY)/2
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
-			#message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY)) GOTTA UNCOMMENT IN THE FUTURE-----------------------------------
+			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
 			pub.send_string(message)
 			#print(message)
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
@@ -184,7 +184,7 @@ while True:
 	if suma == 100: #A
 		pub.send_string("s")
 		var = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-	pub.send_string(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
+	#pub.send_string(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
