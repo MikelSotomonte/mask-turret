@@ -1,7 +1,11 @@
 # import the necessary packages
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
-from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.models import load_model
+
+#from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
+#from tensorflow.keras.preprocessing.image import img_to_array
+#from tensorflow.keras.models import load_model
+import tflite_runtime.interpreter as tf
+#from tflite_runtime import keras
+
 from imutils.video import VideoStream
 #from pygame import mixer
 import numpy as np
@@ -17,14 +21,14 @@ import sys
 from threading import Timer
 import shutil
 import time
-
+"""
 import zmq
 
 ctx = zmq.Context()
 pub = ctx.socket(zmq.PUB)
 pub.setsockopt(zmq.SNDHWM, 2)
 pub.bind('tcp://*:5555')
-
+"""
 detections = None 
 frameCycle = 1
 OLDlocs = 0
@@ -100,8 +104,9 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 
 
 # SETTINGS
-MASK_MODEL_PATH=os.getcwd()+"\\model\\mask_model.h5"
-FACE_MODEL_PATH=os.getcwd()+"\\face_detector" 
+#MASK_MODEL_PATH=os.getcwd()+"\\model\\mask_model.h5"
+MASK_MODEL_PATH= "/home/pi/Desktop/github/mask-turret/model/converted_mask_model.tflite"
+#FACE_MODEL_PATH=os.getcwd()+"\\face_detector" 
 SOUND_PATH=os.getcwd()+"\\sounds\\alarm.wav" 
 THRESHOLD = 0.5
 
@@ -111,13 +116,16 @@ THRESHOLD = 0.5
 
 # load our serialized face detector model from disk
 #print("[INFO] loading face detector model...")
-prototxtPath = os.path.sep.join([FACE_MODEL_PATH, "deploy.prototxt"])
-weightsPath = os.path.sep.join([FACE_MODEL_PATH,"res10_300x300_ssd_iter_140000.caffemodel"])
+#prototxtPath = os.path.sep.join([FACE_MODEL_PATH, "deploy.prototxt"])
+#weightsPath = os.path.sep.join([FACE_MODEL_PATH,"res10_300x300_ssd_iter_140000.caffemodel"])
+prototxtPath = "/home/pi/Desktop/github/mask-turret/face_detector/deploy.prototxt"
+weightsPath = "/home/pi/Desktop/github/mask-turret/face_detector/res10_300x300_ssd_iter_140000.caffemodel"
 faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 
 # load the face mask detector model from disk
 #print("[INFO] loading face mask detector model...")
-maskNet = load_model(MASK_MODEL_PATH)
+#maskNet = load_model(MASK_MODEL_PATH)
+maskNet = tf.Interpreter(MASK_MODEL_PATH)
 
 # initialize the video stream and allow the camera sensor to warm up
 #print("[INFO] starting video stream...")
