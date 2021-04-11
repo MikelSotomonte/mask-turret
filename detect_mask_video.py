@@ -55,7 +55,6 @@ def scale(val, src, dst):
     return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
 
 detections = None 
-frameCycle = 1
 OLDlocs = 0
 OLDpreds = 0
 checking = 0
@@ -65,8 +64,6 @@ global var2
 var2 = 2
 	
 def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
-	global frameCycle
-	global context
 	global OLDlocs
 	global OLDpreds
 	global checking
@@ -79,14 +76,13 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	# pass the blob through the network and obtain the face detections
 	faceNet.setInput(blob)
 	detections = faceNet.forward()
-
 	# initialize our list of faces, their corresponding locations,
 	# and the list of predictions from our face mask network
-	faces = []
 	locs = []
 	preds = []
 	# loop over the detections
-	for i in range(0, detections.shape[1]):
+
+	for i in range(0, detections.shape[0]):
 		# extract the confidence (i.e., probability) associated with
 		confidence = detections[0, 0, i, 2]
 
@@ -106,6 +102,7 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 			# extract the face ROI, convert it from BGR to RGB channel
 			# ordering, resize it to 224x224, and preprocess it
 			face = frame[startY:endY, startX:endX]
+			
 			face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
 			face = cv2.resize(face, (224, 224))
 			face = img_to_array(face)
@@ -151,7 +148,6 @@ maskNet = load_model(MASK_MODEL_PATH)
 #print("[INFO] starting video stream...")
 vs = VideoStream(0).start()
 #time.sleep(2.0)
-frameCycle = 1
 
 # loop over the frames from the video stream
 while True:
@@ -194,8 +190,8 @@ while True:
 			#startX, startY, endX, endY
 			averageX = (startX + endX)/2
 			averageY = (startY + endY)/2
-			averageX = scale(averageX, (0.0, 640), ((-90*sX)+90, (90*sX)+90))
-			averageY = scale(averageY, (0.0, 640), ((-90*sY)+90, (90*sY)+90))
+			averageX = scale(averageX, (0.0, 640), ((-90*sX)+90, +(90*sX)+90))
+			averageY = scale(averageY, (0.0, 640), ((-90*sY)+90, +(90*sY)+90))
 			averageX = averageX + oX
 			averageY = averageY + oY
 			#a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
@@ -209,10 +205,12 @@ while True:
 			
 			#cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
+			
 			#time.sleep(0.1)
 
 	except:
 		pass
+		
 	################### doing the mask average for shooting
 	suma = 0
 	var = str(var) + str(var2)
@@ -252,19 +250,19 @@ while True:
 	#ijkl
 	if key == ord("i"):
 		print("I")
-		sY += 0.005
+		sY += 0.05
 
 	if key == ord("j"):
 		print("J")
-		sX += -0.005
+		sX += -0.05
 
 	if key == ord("k"):
 		print("K")
-		sY += -0.005
+		sY += -0.05
 
 	if key == ord("l"):
 		print("L")
-		sX += 0.005
+		sX += 0.05
 	
 	#print("X= " + str(averageX) + " Y= " + str(averageY) + "oX=" + str(oX) + " oY=" + str(oY) + " sX=" + str(sX) + " sY=" + str(sY))
 	#q
