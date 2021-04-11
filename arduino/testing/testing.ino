@@ -1,40 +1,43 @@
+
 #include <Servo.h>
 
 Servo servo;
 Servo servo2;
-String mainString;
-String xString;
-String yString;
 int x;
 int y;
-int pot1;
-int pot2;
-int state = 0;
-//scale calibration
-float sA = 1;
-float sB= 1;
-//offset calibration
-int oA = 0;
-int oB = 0;
-bool buttonState = 0;
+String mainString, data1, data2;
 
-String readString, data1, data2, data3;
-void setup()
-{
-  pinMode(7, OUTPUT);
-  digitalWrite(7, LOW);
-  pinMode(12, INPUT_PULLUP);
-  servo.attach(9);
-  servo2.attach(10);
-  servo.write(90);
-  servo2.write(90);
-  pinMode(13, OUTPUT);
-  pinMode(7, OUTPUT); //relay
-  Serial.begin(1000000);
-  Serial.setTimeout(5);
+
+void setup() {
+  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
 }
 
 void loop() {
-  
-    buttonState = digitalRead(12);
-    Serial.println(buttonState);}
+  while (Serial.available()) {
+    delay(2);
+    if (Serial.available() >0) {
+      char c = Serial.read();  //gets one byte from serial buffer
+      mainString += c; //makes the string readString
+    }
+  }
+
+  if (mainString.length() >0) {  
+
+    data1 = mainString.substring(0, 3); //get the first three characters
+    data2 = mainString.substring(3, 6); //get the next three characters
+    //data3 = readString.substring(6, 9); //get the next three characters
+
+     
+    x = map(data1.toInt(), 0, 640, 0, 180); // 0, 180
+    y = map(data2.toInt(), 0, 640, 180, 0); // 180, 0
+    servo.write(x);
+    servo2.write(y);
+
+    Serial.print(mainString);
+    Serial.print(", ");
+    Serial.println(x);
+    delay(400);
+    mainString = "";
+  }
+}
+ 

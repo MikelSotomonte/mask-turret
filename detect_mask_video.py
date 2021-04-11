@@ -1,3 +1,19 @@
+
+import serial
+comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
+try:
+	ser = serial.Serial("COM" + comNumber, baudrate = 2000000) #, timeout = 0
+except:
+	print("Error while opening Serial: COM" + str(comNumber))
+	
+
+from tensorflow.compat.v1 import ConfigProto
+from tensorflow.compat.v1 import InteractiveSession
+
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+
 # import the necessary packages
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
@@ -18,12 +34,14 @@ from threading import Timer
 import shutil
 import time
 
-import zmq
+# import zmq
 
-ctx = zmq.Context()
-pub = ctx.socket(zmq.PUB)
-pub.setsockopt(zmq.SNDHWM, 2)
-pub.bind('tcp://*:5555')
+# ctx = zmq.Context()
+# pub = ctx.socket(zmq.PUB)
+# pub.setsockopt(zmq.SNDHWM, 2)
+# pub.bind('tcp://*:5555')
+
+
 
 detections = None 
 frameCycle = 1
@@ -57,46 +75,45 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	locs = []
 	preds = []
 	# loop over the detections
-	if frameCycle == 1:
-		frameCycle = 0
-		for i in range(0, detections.shape[1]):
-			# extract the confidence (i.e., probability) associated with
-			confidence = detections[0, 0, i, 2]
+	for i in range(0, detections.shape[1]):
+		# extract the confidence (i.e., probability) associated with
+		confidence = detections[0, 0, i, 2]
 
-			# filter out weak detections by ensuring the confidence is
-			# greater than the minimum confidence
-			if confidence >threshold:
-				# compute the (x, y)-coordinates of the bounding box for
-				# the object
-				box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-				(startX, startY, endX, endY) = box.astype("int")
+		# filter out weak detections by ensuring the confidence is
+		# greater than the minimum confidence
+		if confidence >threshold:
+			# compute the (x, y)-coordinates of the bounding box for
+			# the object
+			box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+			(startX, startY, endX, endY) = box.astype("int")
 
-				# ensure the bounding boxes fall within the dimensions of
-				# the frame
-				(startX, startY) = (max(0, startX), max(0, startY))
-				(endX, endY) = (min(w - 1, endX), min(h - 1, endY))
+			# ensure the bounding boxes fall within the dimensions of
+			# the frame
+			(startX, startY) = (max(0, startX), max(0, startY))
+			(endX, endY) = (min(w - 1, endX), min(h - 1, endY))
 
-				# extract the face ROI, convert it from BGR to RGB channel
-				# ordering, resize it to 224x224, and preprocess it
-				face = frame[startY:endY, startX:endX]
-				face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-				face = cv2.resize(face, (224, 224))
-				face = img_to_array(face)
-				face = preprocess_input(face)
-				face = np.expand_dims(face, axis=0)
-				
-				# add the face and bounding boxes to their respective
-				# lists
-				locs.append((startX, startY, endX, endY))
-				#print(maskNet.predict(face)[0].tolist())
-				preds.append(maskNet.predict(face)[0].tolist())
-				OLDlocs = locs
-				OLDpreds = preds
+			# extract the face ROI, convert it from BGR to RGB channel
+			# ordering, resize it to 224x224, and preprocess it
+			face = frame[startY:endY, startX:endX]
+			face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
+			face = cv2.resize(face, (224, 224))
+			face = img_to_array(face)
+			face = preprocess_input(face)
+			face = np.expand_dims(face, axis=0)
+			
+			# add the face and bounding boxes to their respective
+			# lists
+			locs.append((startX, startY, endX, endY))
+			#print(maskNet.predict(face)[0].tolist())
+			preds.append(maskNet.predict(face)[0].tolist())
+			OLDlocs = locs
+			OLDpreds = preds
 	else: 
-		frameCycle = 1
 		locs = OLDlocs
 		preds = OLDpreds
 	return (locs, preds)
+
+
 
 
 # SETTINGS
@@ -130,7 +147,7 @@ while True:
 	# grab the frame from the threaded video stream and resize it
 	# to have a maximum width of 400 pixels
 	frame = vs.read()
-	#frame = imutils.resize(frame, width=400)
+	#frame = imutils.resize(frame, width=400) #################make screen smaller######################
 	original_frame = frame.copy()
 	# detect faces in the frame and determine if they are wearing a
 	# face mask or not
@@ -168,8 +185,17 @@ while True:
 			averageY = (startY + endY)/2
 			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
 			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
-			pub.send_string(message)
-			#print(message)
+			#pub.send_string(message)
+			try:
+		
+			
+				ser.write(bytes(message, 'utf-8'))
+				#ser.close()
+				print(message)
+				time.sleep(0.5)
+			except Exception as e: print(e)
+			
+			
 			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 			#time.sleep(0.1)
@@ -182,7 +208,9 @@ while True:
 	for char in var:
 		suma += int(char)
 	if suma == 100: #A
-		pub.send_string("s")
+		print("s")
+		#ser.write(("s"))
+		#pub.send_string("s")   #.encode(encoding='UTF-8'))
 		var = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 	#pub.send_string(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
@@ -193,7 +221,7 @@ while True:
 	
 	# if the `q` key was pressed, break from the loop
 	if key == ord("q"):
-		pub.send_string("quit")
+		#pub.send_string("quit")
 		break
 
 # do a bit of cleanup

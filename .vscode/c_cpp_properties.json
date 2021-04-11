@@ -3,6 +3,8 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\mikel\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
+                "C:\\Users\\mikel\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\2.7.4\\**",
                 "C:\\Program Files (x86)\\Arduino\\tools\\**",
                 "C:\\Users\\mikel\\Documents\\Arduino\\libraries\\**",
                 "C:\\Program Files (x86)\\Arduino\\libraries\\**",
@@ -21,9 +23,7 @@
             "cStandard": "c11",
             "cppStandard": "c++17",
             "intelliSenseMode": "msvc-x64",
-            "forcedInclude": [
-                "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\cores\\arduino\\Arduino.h"
-            ]
+            "forcedInclude": []
         }
     ],
     "version": 4
