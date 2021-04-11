@@ -27,6 +27,8 @@ import cv2
 import os
 import math
 
+import tkinter as tk
+
 #system libraries
 import os
 import sys
@@ -192,7 +194,7 @@ while True:
 				ser.write(bytes(message, 'utf-8'))
 				#ser.close()
 				print(message)
-				time.sleep(0.5)
+				#time.sleep(0.5)
 			except Exception as e: print(e)
 			
 			

@@ -9,7 +9,11 @@ String mainString, data1, data2;
 
 
 void setup() {
-  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
+  servo.attach(9);
+  servo2.attach(10);
+  servo.write(90);
+  servo2.write(90);
+  Serial.begin(2000000); // opens serial port, sets data rate to 9600 bps
 }
 
 void loop() {
@@ -29,14 +33,10 @@ void loop() {
 
      
     x = map(data1.toInt(), 0, 640, 0, 180); // 0, 180
-    y = map(data2.toInt(), 0, 640, 180, 0); // 180, 0
+    y = map(data2.toInt(), 0, 640, 0, 180); // 180, 0
     servo.write(x);
     servo2.write(y);
-
-    Serial.print(mainString);
-    Serial.print(", ");
-    Serial.println(x);
-    delay(400);
+    //delay(400);
     mainString = "";
   }
 }
