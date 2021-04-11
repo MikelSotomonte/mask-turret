@@ -27,7 +27,6 @@ import cv2
 import os
 import math
 
-import tkinter as tk
 
 #system libraries
 import os
@@ -44,6 +43,16 @@ import time
 # pub.bind('tcp://*:5555')
 
 
+sX = 1
+oX = 0
+sY = 1
+oY = 0
+
+def scale(val, src, dst):
+    """
+    basically el map() de arduino
+    """
+    return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
 
 detections = None 
 frameCycle = 1
@@ -185,22 +194,23 @@ while True:
 			#startX, startY, endX, endY
 			averageX = (startX + endX)/2
 			averageY = (startY + endY)/2
-			a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
+			averageX = scale(averageX, (0.0, 640), ((-90*sX)+90, (90*sX)+90))
+			averageY = scale(averageY, (0.0, 640), ((-90*sY)+90, (90*sY)+90))
+			averageX = averageX + oX
+			averageY = averageY + oY
+			#a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
 			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
 			#pub.send_string(message)
 			try:
-		
-			
 				ser.write(bytes(message, 'utf-8'))
-				#ser.close()
-				print(message)
-				#time.sleep(0.5)
+				#print(message)
 			except Exception as e: print(e)
+						
 			
-			
-			cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
+			#cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
 			#time.sleep(0.1)
+
 	except:
 		pass
 	################### doing the mask average for shooting
@@ -218,12 +228,47 @@ while True:
 	###################
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
-	cv2.imshow("Masks Detection by Oh Yicong and modified by Mikel Casado", frame)
+	cv2.imshow("UwU CUM", frame)
 	key = cv2.waitKey(1) & 0xFF
 	
-	# if the `q` key was pressed, break from the loop
+	# wasd
+	if key == ord("w"):
+		print("W")
+		oY += -5
+
+	if key == ord("a"):
+		print("A")
+		oX += 5
+
+	if key == ord("s"):
+		print("S")
+		oY += 5
+
+	if key == ord("d"):
+		print("D")
+		oX += -5
+
+
+	#ijkl
+	if key == ord("i"):
+		print("I")
+		sY += 0.005
+
+	if key == ord("j"):
+		print("J")
+		sX += -0.005
+
+	if key == ord("k"):
+		print("K")
+		sY += -0.005
+
+	if key == ord("l"):
+		print("L")
+		sX += 0.005
+	
+	#print("X= " + str(averageX) + " Y= " + str(averageY) + "oX=" + str(oX) + " oY=" + str(oY) + " sX=" + str(sX) + " sY=" + str(sY))
+	#q
 	if key == ord("q"):
-		#pub.send_string("quit")
 		break
 
 # do a bit of cleanup
