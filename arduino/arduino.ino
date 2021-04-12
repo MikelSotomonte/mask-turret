@@ -26,7 +26,9 @@ void loop() {
   }
 
   if (mainString.length() >0) {  
-
+    if(mainString == "999999"){
+      digitalWrite()
+      }
     data1 = mainString.substring(0, 3); //get the first three characters
     data2 = mainString.substring(3, 6); //get the next three characters
     //data3 = readString.substring(6, 9); //get the next three characters

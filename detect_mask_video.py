@@ -67,6 +67,9 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	global OLDlocs
 	global OLDpreds
 	global checking
+	global mask
+	global withoutMask
+	global faces
 	# grab the dimensions of the frame and then construct a blob
 	# from it
 	global detections 
@@ -117,8 +120,10 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 			OLDlocs = locs
 			OLDpreds = preds
 	else: 
+		faces = len(locs)
 		locs = OLDlocs
 		preds = OLDpreds
+	
 	return (locs, preds)
 
 
@@ -169,6 +174,7 @@ while True:
 			# determine the class label and color we'll use to draw
 			# the bounding box and text
 			label = "Mask" if mask > withoutMask else "No Mask"
+			#print(str(mask + withoutMask) + "mask: " + str(mask) +" withoutMask:" + str(withoutMask))
 			#if(label=="No Mask") and (mixer.get_busy()==False):
 			#    sound.play()
 			color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
@@ -212,17 +218,20 @@ while True:
 		pass
 		
 	################### doing the mask average for shooting
+	
+	if faces == 0:
+		var = "0000000000000000000000000" #25 A
 	suma = 0
 	var = str(var) + str(var2)
-	var = var[1:101] #A + 1
+	var = var[1:26] #A + 1
 	for char in var:
 		suma += int(char)
-	if suma == 100: #A
+	if suma == 25: #A
 		print("s")
 		#ser.write(("s"))
 		#pub.send_string("s")   #.encode(encoding='UTF-8'))
-		var = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-	#pub.send_string(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
+		var = "0000000000000000000000000"
+	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
 	# show the output frame
 	#frame= cv2.resize(frame,(640,480))
