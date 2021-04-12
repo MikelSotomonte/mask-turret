@@ -226,11 +226,12 @@ while True:
 	var = var[1:26] #A + 1
 	for char in var:
 		suma += int(char)
-	if suma == 25: #A
+	if suma >= 25: #A
 		print("s")
 		#ser.write(("s"))
 		#pub.send_string("s")   #.encode(encoding='UTF-8'))
 		var = "0000000000000000000000000"
+		ser.write(bytes("000000", 'utf-8'))
 	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
 	# show the output frame
