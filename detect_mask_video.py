@@ -220,18 +220,19 @@ while True:
 	################### doing the mask average for shooting
 	
 	if faces == 0:
-		var = "0000000000000000000000000" #25 A
+		var = "00000000000000000000000000000000000000000000000000" #50 A
 	suma = 0
 	var = str(var) + str(var2)
-	var = var[1:26] #A + 1
+	var = var[1:51] #A + 1
 	for char in var:
 		suma += int(char)
-	if suma >= 25: #A
+	if suma >= 50: #A
 		print("s")
 		#ser.write(("s"))
 		#pub.send_string("s")   #.encode(encoding='UTF-8'))
-		var = "0000000000000000000000000"
-		ser.write(bytes("000000", 'utf-8'))
+		var = "00000000000000000000000000000000000000000000000000"
+		ser.write(bytes('s', 'utf-8'))
+		
 	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
 	# show the output frame
