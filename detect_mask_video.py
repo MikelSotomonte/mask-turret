@@ -231,7 +231,9 @@ while True:
 		#ser.write(("s"))
 		#pub.send_string("s")   #.encode(encoding='UTF-8'))
 		var = "00000000000000000000000000000000000000000000000000"
-		ser.write(bytes('s', 'utf-8'))
+		try: 
+			ser.write(bytes('s', 'utf-8'))
+		except Exception as f: print(f)
 		
 	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################

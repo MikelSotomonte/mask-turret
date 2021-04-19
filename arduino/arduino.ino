@@ -25,7 +25,7 @@ void loop() {
       char c = Serial.read();  //gets one byte from serial buffer
       if(c == 's'){
         digitalWrite(12, HIGH);
-        delay(700);
+        delay(600);
         digitalWrite(12, LOW);
         mainString = "";
       }
