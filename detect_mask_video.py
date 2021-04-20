@@ -1,11 +1,6 @@
-
+# coding=utf-8
 import serial
-comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
-try:
-	ser = serial.Serial("COM" + comNumber, baudrate = 2000000) #, timeout = 0
-except:
-	print("Error while opening Serial: COM" + str(comNumber))
-	
+import serial.tools.list_ports
 
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
@@ -42,11 +37,17 @@ import time
 # pub.setsockopt(zmq.SNDHWM, 2)
 # pub.bind('tcp://*:5555')
 
-
+"""default values without calibration:
 sX = 1
 oX = 0
 sY = 1
 oY = 0
+"""
+#calibrated:
+sX = 0.4
+oX = 24
+sY = 0.8
+oY = 5
 
 def scale(val, src, dst):
     """
@@ -155,6 +156,7 @@ vs = VideoStream(0).start()
 #time.sleep(2.0)
 
 # loop over the frames from the video stream
+print("Press \"H\" for help")
 while True:
 	# grab the frame from the threaded video stream and resize it
 	# to have a maximum width of 400 pixels
@@ -206,7 +208,8 @@ while True:
 			try:
 				ser.write(bytes(message, 'utf-8'))
 				#print(message)
-			except Exception as e: print(e)
+			#except Exception as e: print(e)
+			except: pass
 						
 			
 			#cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
@@ -231,10 +234,10 @@ while True:
 		#ser.write(("s"))
 		#pub.send_string("s")   #.encode(encoding='UTF-8'))
 		var = "00000000000000000000000000000000000000000000000000"
-		try: 
+		try:
 			ser.write(bytes('s', 'utf-8'))
-		except Exception as f: print(f)
-		
+		#except Exception as e: print(e)
+		except: pass
 	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
 	###################
 	# show the output frame
@@ -263,25 +266,41 @@ while True:
 	#ijkl
 	if key == ord("i"):
 		print("I")
-		sY += 0.05
+		sY += 0.2
 
 	if key == ord("j"):
 		print("J")
-		sX += -0.05
+		sX += -0.2
 
 	if key == ord("k"):
 		print("K")
-		sY += -0.05
+		sY += -0.2
 
 	if key == ord("l"):
 		print("L")
-		sX += 0.05
-	
-	#print("X= " + str(averageX) + " Y= " + str(averageY) + "oX=" + str(oX) + " oY=" + str(oY) + " sX=" + str(sX) + " sY=" + str(sY))
+		sX += 0.2
+	#x
+	if key == ord("x"):
+		try:
+			print("X= " + str(averageX) + " Y= " + str(averageY) + "\noX=" + str(oX) + " oY=" + str(oY) + " sX=" + str(sX) + " sY=" + str(sY))
+		except: print("A face must be detected first, as some variables are defined then.")
+	#h
+	if key == ord("h"):
+		print("These are the controls:\n╔═══════════╦══════════╦════════╦═════════════════════╦════════╦════════╗\n║  Offsets  ║  Scales  ║  COMs  ║  Print Calibration  ║  Help  ║  Quit  ║\n╠═══════════╬══════════╬════════╬═════════════════════╬════════╬════════╣\n║     W     ║     I    ║    Z   ║          X          ║    H   ║    Q   ║\n║    ASD    ║    JKL   ║        ║                     ║        ║        ║\n╚═══════════╩══════════╩════════╩═════════════════════╩════════╩════════╝\n")
 	#q
 	if key == ord("q"):
 		break
-
+	#z
+	if key == ord("z"):
+		print("These are the available COMs:")
+		ports = serial.tools.list_ports.comports()
+		for port, desc, hwid in sorted(ports):
+			print("{}: {} [{}]".format(port, desc, hwid))
+		comNumber = input("Please enter the com number (for COM2 type 2, for example)\n> ")
+		try:
+			ser = serial.Serial("COM" + comNumber, baudrate = 2000000, timeout = 0) #, timeout = 0
+		except:
+			print("Error while opening Serial: COM" + str(comNumber))
 # do a bit of cleanup
 cv2.destroyAllWindows()
 vs.stop()
