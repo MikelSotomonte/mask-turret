@@ -22,20 +22,12 @@ import cv2
 import os
 import math
 
-
 #system libraries
 import os
 import sys
 from threading import Timer
 import shutil
 import time
-
-# import zmq
-
-# ctx = zmq.Context()
-# pub = ctx.socket(zmq.PUB)
-# pub.setsockopt(zmq.SNDHWM, 2)
-# pub.bind('tcp://*:5555')
 
 """default values without calibration:
 sX = 1
@@ -127,9 +119,6 @@ def detect_and_predict_mask(frame, faceNet, maskNet,threshold):
 	
 	return (locs, preds)
 
-
-
-
 # SETTINGS
 MASK_MODEL_PATH=os.getcwd()+"\\model\\mask_model.h5"
 FACE_MODEL_PATH=os.getcwd()+"\\face_detector" 
@@ -195,7 +184,6 @@ while True:
 			except: 
 				pass
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
-
 	except:
 		pass
 
@@ -234,7 +222,6 @@ while True:
 	if key == ord("d"):
 		print("D")
 		oX += -5
-
 
 	#ijkl
 	if key == ord("i"):
