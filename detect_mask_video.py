@@ -136,32 +136,22 @@ FACE_MODEL_PATH=os.getcwd()+"\\face_detector"
 SOUND_PATH=os.getcwd()+"\\sounds\\alarm.wav" 
 THRESHOLD = 0.5
 
-# Load Sounds
-#mixer.init()
-#sound = mixer.Sound(SOUND_PATH)
-
 # load our serialized face detector model from disk
-#print("[INFO] loading face detector model...")
 prototxtPath = os.path.sep.join([FACE_MODEL_PATH, "deploy.prototxt"])
 weightsPath = os.path.sep.join([FACE_MODEL_PATH,"res10_300x300_ssd_iter_140000.caffemodel"])
 faceNet = cv2.dnn.readNet(prototxtPath, weightsPath)
 
 # load the face mask detector model from disk
-#print("[INFO] loading face mask detector model...")
 maskNet = load_model(MASK_MODEL_PATH)
 
 # initialize the video stream and allow the camera sensor to warm up
-#print("[INFO] starting video stream...")
 vs = VideoStream(0).start()
-#time.sleep(2.0)
 
 # loop over the frames from the video stream
 print("Press \"H\" for help")
 while True:
-	# grab the frame from the threaded video stream and resize it
-	# to have a maximum width of 400 pixels
+	# grab the frame from the threaded video stream
 	frame = vs.read()
-	#frame = imutils.resize(frame, width=400) #################make screen smaller######################
 	original_frame = frame.copy()
 	# detect faces in the frame and determine if they are wearing a
 	# face mask or not
@@ -176,9 +166,6 @@ while True:
 			# determine the class label and color we'll use to draw
 			# the bounding box and text
 			label = "Mask" if mask > withoutMask else "No Mask"
-			#print(str(mask + withoutMask) + "mask: " + str(mask) +" withoutMask:" + str(withoutMask))
-			#if(label=="No Mask") and (mixer.get_busy()==False):
-			#    sound.play()
 			color = (0, 255, 0) if label == "Mask" else (0, 0, 255)
 			if label == "Mask":
 				var2 = 0 
@@ -202,26 +189,17 @@ while True:
 			averageY = scale(averageY, (0.0, 640), ((-90*sY)+90, +(90*sY)+90))
 			averageX = averageX + oX
 			averageY = averageY + oY
-			#a = str(averageX) + "_" + str(averageY) + "_" + str(round((mask*100), 2)) + "_" + str(round((withoutMask*100), 2))
 			message = "{0:03d}".format(int(averageX)) + "{0:03d}".format(int(averageY))
-			#pub.send_string(message)
 			try:
 				ser.write(bytes(message, 'utf-8'))
-				#print(message)
-			#except Exception as e: print(e)
-			except: pass
-						
-			
-			#cv2.circle(original_frame, (int(averageX), int(averageY)), 3, (0, 255, 255), -1) #preview the face center, the target
+			except: 
+				pass
 			cv2.addWeighted(frame, 0.5, original_frame, 0.5 , 0,frame)
-			
-			#time.sleep(0.1)
 
 	except:
 		pass
-		
-	################### doing the mask average for shooting
-	
+
+	# doing the mask average for shooting
 	if faces == 0:
 		var = "00000000000000000000000000000000000000000000000000" #50 A
 	suma = 0
@@ -230,18 +208,13 @@ while True:
 	for char in var:
 		suma += int(char)
 	if suma >= 50: #A
-		print("s")
-		#ser.write(("s"))
-		#pub.send_string("s")   #.encode(encoding='UTF-8'))
+		print("shoot!")
 		var = "00000000000000000000000000000000000000000000000000"
 		try:
 			ser.write(bytes('s', 'utf-8'))
 		#except Exception as e: print(e)
 		except: pass
-	#print(str(suma) + "(suma) | " + str(var2) + " (var2) | " + str(var) + " (var)")
-	###################
-	# show the output frame
-	#frame= cv2.resize(frame,(640,480))
+
 	cv2.imshow("UwU CUM", frame)
 	key = cv2.waitKey(1) & 0xFF
 	
